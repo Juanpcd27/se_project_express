@@ -25,6 +25,21 @@ const getItems = (req, res) => {
     });
 };
 
+const deleteItem = (req, res) => {
+  const { itemId } = req.params;
+
+  ClothingItem.findByIdAndDelete(itemId)
+    .orFail()
+    .then((item) => res.status(200).send(item))
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "CastError") {
+        return res.status(400).send({ message: err.message });
+      }
+      return res.status(500).send({ message: err.message });
+    });
+};
+
 const likeItem = (req, res) =>
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
@@ -39,4 +54,4 @@ const dislikeItem = (req, res) =>
     { new: true }
   );
 
-module.exports = { addItem, getItems, likeItem, dislikeItem };
+module.exports = { addItem, getItems, deleteItem, likeItem, dislikeItem };
