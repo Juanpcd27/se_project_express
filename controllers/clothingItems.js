@@ -1,3 +1,4 @@
+const clothingItem = require("../models/clothingItem");
 const ClothingItem = require("../models/clothingItem");
 
 const addItem = (req, res) => {
@@ -24,4 +25,18 @@ const getItems = (req, res) => {
     });
 };
 
-module.exports = { addItem, getItems };
+const likeItem = (req, res) =>
+  ClothingItem.findByIdAndUpdate(
+    req.params.itemId,
+    { $addToSet: { likes: req.user._id } },
+    { new: true }
+  );
+
+const dislikeItem = (req, res) =>
+  ClothingItem.findByIdAndUpdate(
+    req.params.itemId,
+    { $pull: { likes: req.user._id } },
+    { new: true }
+  );
+
+module.exports = { addItem, getItems, likeItem, dislikeItem };
