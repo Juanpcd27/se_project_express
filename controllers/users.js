@@ -1,5 +1,9 @@
 const User = require("../models/user");
-const { invalid400, notFound, defaultError } = require("../utils/errors");
+const {
+  invalid400,
+  documentNotFound,
+  defaultError,
+} = require("../utils/errors");
 
 const getUsers = (req, res) => {
   User.find({})
@@ -36,7 +40,9 @@ const getUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(notFound).send({ message: "Document not found" });
+        return res
+          .status(documentNotFound)
+          .send({ message: "Document not found" });
       }
       if (err.name === "CastError") {
         return res.status(invalid400).send({ message: "Invalid data" });

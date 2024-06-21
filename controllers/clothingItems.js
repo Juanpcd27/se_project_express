@@ -1,6 +1,10 @@
 const ClothingItem = require("../models/clothingItem");
 
-const { invalid400, notFound, defaultError } = require("../utils/errors");
+const {
+  invalid400,
+  documentNotFound,
+  defaultError,
+} = require("../utils/errors");
 
 const addItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
@@ -42,7 +46,9 @@ const deleteItem = (req, res) => {
         return res.status(invalid400).send({ message: "Invalid data" });
       }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(notFound).send({ message: "Document not found" });
+        return res
+          .status(documentNotFound)
+          .send({ message: "Document not found" });
       }
     });
 };
@@ -61,7 +67,9 @@ const likeItem = (req, res) => {
         return res.status(invalid400).send({ message: "Invalid data" });
       }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(notFound).send({ message: "Document not found" });
+        return res
+          .status(documentNotFound)
+          .send({ message: "Document not found" });
       }
     });
 };
@@ -80,7 +88,9 @@ const dislikeItem = (req, res) => {
         return res.status(invalid400).send({ message: "Invalid data" });
       }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(notFound).send({ message: "Document not found" });
+        return res
+          .status(documentNotFound)
+          .send({ message: "Document not found" });
       }
     });
 };
