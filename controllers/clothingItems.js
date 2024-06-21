@@ -1,5 +1,7 @@
 const ClothingItem = require("../models/clothingItem");
 
+const { invalid400, notFound, defaultError } = require("../utils/errors");
+
 const addItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
@@ -9,9 +11,11 @@ const addItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(400).send({ message: err.message });
+        return res.status(invalid400).send({ message: "Invalid data" });
       }
-      return res.status(500).send({ message: err.message });
+      return res
+        .status(defaultError)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -20,7 +24,9 @@ const getItems = (req, res) => {
     .then((items) => res.status(200).send(items))
     .catch((err) => {
       console.error(err);
-      return res.status(500).send({ message: err.message });
+      return res
+        .status(defaultError)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -33,9 +39,11 @@ const deleteItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
-        return res.status(400).send({ message: err.message });
+        return res.status(invalid400).send({ message: "Invalid data" });
       }
-      return res.status(404).send({ message: err.message });
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(notFound).send({ message: "Document not found" });
+      }
     });
 };
 
@@ -50,9 +58,11 @@ const likeItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
-        return res.status(400).send({ message: err.message });
+        return res.status(invalid400).send({ message: "Invalid data" });
       }
-      return res.status(404).send({ message: err.message });
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(notFound).send({ message: "Document not found" });
+      }
     });
 };
 
@@ -67,9 +77,11 @@ const dislikeItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
-        return res.status(400).send({ message: err.message });
+        return res.status(invalid400).send({ message: "Invalid data" });
       }
-      return res.status(404).send({ message: err.message });
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(notFound).send({ message: "Document not found" });
+      }
     });
 };
 
