@@ -11,7 +11,7 @@ router.use("/users", userRouter);
 router.use("/items", itemsRouter);
 
 router.use((req, res) => {
-  res.status(documentNotFound).send("Router not found");
+  res.status(documentNotFound).send({ message: "Router not found" });
 });
 
 module.exports = router;

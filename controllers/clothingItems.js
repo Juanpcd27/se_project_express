@@ -50,6 +50,9 @@ const deleteItem = (req, res) => {
           .status(documentNotFound)
           .send({ message: "Document not found" });
       }
+      return res
+        .status(defaultError)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -71,6 +74,9 @@ const likeItem = (req, res) => {
           .status(documentNotFound)
           .send({ message: "Document not found" });
       }
+      return res
+        .status(defaultError)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -92,6 +98,9 @@ const dislikeItem = (req, res) => {
           .status(documentNotFound)
           .send({ message: "Document not found" });
       }
+      return res
+        .status(defaultError)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
