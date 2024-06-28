@@ -70,7 +70,11 @@ const createUser = (req, res) => {
       return bcrypt.hash(password, 10);
     })
     .then((hash) => User.create({ name, avatar, email, password: hash }))
-    .then((user) => res.status(201).send(user))
+    .then((user) => {
+      const userObj = user.toObject();
+      delete userObj.password;
+      res.status(201).send(userObj);
+    })
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
