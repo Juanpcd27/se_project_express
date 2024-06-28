@@ -9,7 +9,7 @@ const {
 const jwt = require("jsonwebtoken");
 
 const JWT_SECRET = require("../utils/config");
-const { hash } = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 
 const getUsers = (req, res) => {
   User.find({})
@@ -63,11 +63,11 @@ const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
   User.findOne({ email })
-    .select("+password")
     .then((user) => {
       if (user) {
-        return bcrypt.hash(password, 10);
+        return res.status(409).send({ message: "User exists" });
       }
+      return bcrypt.hash(password, 10);
     })
     .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) => res.status(201).send(user))
@@ -118,7 +118,7 @@ const login = (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      if (err.name === "ValidationError") {
+      if (err.name === "Incorrect password or email") {
         return res.status(invalid400).send({ message: "Invalid data" });
       }
 

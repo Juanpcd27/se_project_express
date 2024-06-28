@@ -45,19 +45,20 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(
   password
 ) {
   return this.findOne({ email })
-  .then((user) => {
-    if (!user) {
-      return Promise.reject(new Error("Incorrect password or email"));
-    }
-
-    return bcrypt.compare(password, user.password).then((matched) => {
-      if (!matched) {
+    .select("+password")
+    .then((user) => {
+      if (!user) {
         return Promise.reject(new Error("Incorrect password or email"));
       }
 
-      return user;
+      return bcrypt.compare(password, user.password).then((matched) => {
+        if (!matched) {
+          return Promise.reject(new Error("Incorrect password or email"));
+        }
+
+        return user;
+      });
     });
-  });
 };
 
 module.exports = mongoose.model("user", userSchema);
