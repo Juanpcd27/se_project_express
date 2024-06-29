@@ -18,9 +18,7 @@ router.post("/signup", createUser);
 
 router.get("/users/me", getCurrentUser);
 
-router.patch("/users/me", updateUser);
-
-// router.use("/users", userRouter);
+router.use("/users", userRouter);
 
 router.use("/items", itemsRouter);
 
