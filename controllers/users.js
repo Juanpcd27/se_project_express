@@ -65,6 +65,7 @@ const getCurrentUser = (req, res) => {
 
 const updateUser = (req, res) => {
   const { name, avatar } = req.body;
+  // const { userId } = req.params;
   User.findByIdAndUpdate(req.user._id, { name, avatar })
     .orFail()
     .then((user) => res.send(user))
