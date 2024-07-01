@@ -5,7 +5,7 @@ const { auth } = require("./middlewares/auth");
 const cors = require("cors");
 const router = require("express").Router();
 const { login, createUser, getCurrentUser } = require("./controllers/users");
-
+const { getItems } = require("./controllers/clothingItems");
 const app = express();
 const { PORT = 3001 } = process.env;
 
@@ -16,14 +16,13 @@ mongoose
   })
   .catch(console.error);
 
-router.post("/signin", login);
-
-router.post("/signup", createUser);
-
-router.get("/users/me", getCurrentUser);
-
 app.use(cors());
 app.use(express.json());
+
+app.get("/", getItems);
+app.post("/signin", login);
+app.post("/signup", createUser);
+
 app.use("/", mainRouter);
 
 app.listen(PORT, () => {

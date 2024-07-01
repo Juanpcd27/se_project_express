@@ -5,15 +5,9 @@ const userRouter = require("./users");
 const itemsRouter = require("./clothingItems");
 
 const { documentNotFound } = require("../utils/errors");
-const { login, createUser, getCurrentUser } = require("../controllers/users");
+// const { login, createUser, getCurrentUser } = require("../controllers/users");
 
-router.post("/signin", login);
-
-router.post("/signup", createUser);
-
-router.get("/users/me", getCurrentUser);
-
-router.use("/users/me", userRouter);
+router.use("/users", userRouter);
 
 router.use("/items", itemsRouter);
 

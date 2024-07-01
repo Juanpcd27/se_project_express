@@ -43,7 +43,7 @@ const createUser = (req, res) => {
 };
 
 const getCurrentUser = (req, res) => {
-  const { userId } = req.params;
+  const { userId } = req.user._id;
   User.findById(userId)
     .orFail()
     .then((user) => res.send(user))
@@ -65,8 +65,8 @@ const getCurrentUser = (req, res) => {
 
 const updateUser = (req, res) => {
   const { name, avatar } = req.body;
-  // const { userId } = req.params;
-  User.findByIdAndUpdate(req.user._id, { name, avatar })
+  const { userId } = req.user._id;
+  User.findByIdAndUpdate(userId, { name, avatar })
     .orFail()
     .then((user) => res.send(user))
     .catch((err) => {
