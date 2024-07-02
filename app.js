@@ -19,7 +19,7 @@ mongoose
 app.use(cors());
 app.use(express.json());
 
-app.get("/", getItems);
+app.get("/items", getItems);
 app.post("/signin", login);
 app.post("/signup", createUser);
 
