@@ -1,11 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const mainRouter = require("./routes/index");
-const { auth } = require("./middlewares/auth");
 const cors = require("cors");
+const mainRouter = require("./routes/index");
 const { login, createUser } = require("./controllers/users");
 const { getItems } = require("./controllers/clothingItems");
 const app = express();
+
 const { PORT = 3001 } = process.env;
 
 mongoose
