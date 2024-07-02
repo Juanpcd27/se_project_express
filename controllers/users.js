@@ -7,6 +7,9 @@ const {
   documentNotFound,
   defaultError,
   existsError,
+  duplicateError,
+  successReq,
+  authError,
 } = require("../utils/errors");
 
 const { JWT_SECRET } = require("../utils/config");
@@ -14,11 +17,11 @@ const { JWT_SECRET } = require("../utils/config");
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
-  User.findOne({ email }).then((user) => {
-    if (user) {
-      return res.status(existsError).send({ message: "User exists" });
-    }
-  });
+  // User.findOne({ email }).then((user) => {
+  //   if (user) {
+  //     return res.status(existsError).send({ message: "User exists" });
+  //   }
+  // });
 
   return bcrypt
     .hash(password, 10)
@@ -26,15 +29,14 @@ const createUser = (req, res) => {
     .then((user) => {
       const userObj = user.toObject();
       delete userObj.password;
-      res.status(201).send(userObj);
+      res.status(successReq).send(userObj);
     })
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
         return res.status(invalid400).send({ message: "Invalid data" });
       }
-
-      if (err.code === 11000) {
+      if (err.code === duplicateError) {
         return res
           .status(existsError)
           .send({ message: "Email already exists" });
@@ -78,6 +80,10 @@ const updateUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       console.error(err);
+      if (err.name === "ValidationError") {
+        return res.status(invalid400).send({ message: "Invalid data" });
+      }
+
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(documentNotFound)
@@ -104,7 +110,14 @@ const login = (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      return res.status(invalid400).send({ message: "Invalid authentication" });
+      if (err.message === "Incorrect password or email") {
+        return res
+          .status(authError)
+          .send({ message: "Incorrect password ot email" });
+      }
+      return res
+        .status(defaultError)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 

@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema({
       },
       message: "You must enter a valid Email Address",
     },
+    unique: true,
   },
 
   password: {
