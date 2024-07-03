@@ -26,7 +26,7 @@ const addItem = (req, res) => {
 
 const getItems = (req, res) => {
   ClothingItem.find({})
-    .then((items) => res.status(200).send(items))
+    .then((items) => res.send(items))
     .catch((err) => {
       console.error(err);
       return res
@@ -41,21 +41,10 @@ const deleteItem = (req, res) => {
   ClothingItem.findById(itemId)
     .orFail()
     .then((item) => {
-      if (String.item.owner !== req.user._id) {
+      if (String(item.owner) !== req.user._id) {
         return res
           .status(forbiddenError)
-          .send({ message: "You are not authorized to delete this item" })
-          .catch((err) => {
-            console.log(err);
-            if (err.name === "CastError") {
-              return res.status(invalid400).send({ message: "Invalid data" });
-            }
-            if (err.name === "DocumentNotFoundError") {
-              return res
-                .status(documentNotFound)
-                .send({ message: "Document not found" });
-            }
-          });
+          .send({ message: "You are not authorized to delete this item" });
       }
 
       return item
@@ -70,6 +59,20 @@ const deleteItem = (req, res) => {
             .status(defaultError)
             .send({ message: "An error has occurred on the server." });
         });
+    })
+    .catch((err) => {
+      console.log(err);
+      if (err.name === "CastError") {
+        return res.status(invalid400).send({ message: "Invalid data" });
+      }
+      if (err.name === "DocumentNotFoundError") {
+        return res
+          .status(documentNotFound)
+          .send({ message: "Document not found" });
+      }
+      return res
+        .status(defaultError)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
