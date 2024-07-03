@@ -22,6 +22,7 @@ module.exports = {
   },
 
   rules: {
+    "eslint/newline-after-import": "off",
     "no-console": ["warn", { allow: ["error"] }],
     "no-underscore-dangle": ["error", { allow: ["_id"] }],
   },
