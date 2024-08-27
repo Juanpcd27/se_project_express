@@ -5,9 +5,13 @@ const app = express();
 const { PORT = 3001 } = process.env;
 
 const cors = require("cors");
+require("dotenv").config();
 const mainRouter = require("./routes/index");
 const { login, createUser } = require("./controllers/users");
 const { getItems } = require("./controllers/clothingItems");
+const { errorHandler } = require("./middlewares/error-handler");
+const { errors } = require("celebrate");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
@@ -22,8 +26,12 @@ app.use(express.json());
 app.get("/items", getItems);
 app.post("/signin", login);
 app.post("/signup", createUser);
+app.use(requestLogger);
 
 app.use("/", mainRouter);
+app.use(errorLogger);
+app.use(errors());
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

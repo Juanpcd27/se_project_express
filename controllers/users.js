@@ -2,26 +2,20 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 const User = require("../models/user");
+const { duplicateError, successReq } = require("../utils/errors");
+
 const {
-  invalid400,
-  documentNotFound,
-  defaultError,
-  existsError,
-  duplicateError,
-  successReq,
-  authError,
-} = require("../utils/errors");
+  BadRequestError,
+  UnauthorizedError,
+  ForbiddenError,
+  NotFoundError,
+  ConflictError,
+} = require("../middlewares/error-handler");
 
 const { JWT_SECRET } = require("../utils/config");
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
-
-  // User.findOne({ email }).then((user) => {
-  //   if (user) {
-  //     return res.status(existsError).send({ message: "User exists" });
-  //   }
-  // });
 
   return bcrypt
     .hash(password, 10)
@@ -34,20 +28,16 @@ const createUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(invalid400).send({ message: "Invalid data" });
+        next(new BadRequestError("Invalid data"));
       }
       if (err.code === duplicateError) {
-        return res
-          .status(existsError)
-          .send({ message: "Email already exists" });
+        next(new ConflictError("Email already exists"));
       }
-      return res
-        .status(defaultError)
-        .send({ message: "An error has occurred on the server." });
+      return next(err);
     });
 };
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
   User.findById(userId)
     .orFail()
@@ -55,20 +45,16 @@ const getCurrentUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res
-          .status(documentNotFound)
-          .send({ message: "Document not found" });
+        next(new NotFoundError("Document not found"));
       }
       if (err.name === "CastError") {
-        return res.status(invalid400).send({ message: "Invalid data" });
+        next(new BadRequestError("Invalid data"));
       }
-      return res
-        .status(defaultError)
-        .send({ message: "An error has occurred on the server." });
+      return next(err);
     });
 };
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const { name, avatar } = req.body;
   const userId = req.user._id;
   User.findByIdAndUpdate(
@@ -81,24 +67,21 @@ const updateUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(invalid400).send({ message: "Invalid data" });
+        next(new BadRequestError("Invalid data"));
       }
 
       if (err.name === "DocumentNotFoundError") {
-        return res
-          .status(documentNotFound)
-          .send({ message: "Document not found" });
+        next(new NotFoundError("Document not found"));
       }
+
       if (err.name === "CastError") {
-        return res.status(invalid400).send({ message: "Invalid data" });
+        next(new BadRequestError("Invalid data"));
       }
-      return res
-        .status(defaultError)
-        .send({ message: "An error has occurred on the server." });
+      return next(err);
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
@@ -111,13 +94,9 @@ const login = (req, res) => {
     .catch((err) => {
       console.log(err);
       if (err.message === "Incorrect password or email") {
-        return res
-          .status(authError)
-          .send({ message: "Incorrect password ot email" });
+        next(new UnauthorizedError("Incorrect password ot email"));
       }
-      return res
-        .status(defaultError)
-        .send({ message: "An error has occurred on the server." });
+      return next(err);
     });
 };
 
