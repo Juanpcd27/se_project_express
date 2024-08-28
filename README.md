@@ -17,3 +17,5 @@ Technologies used:
 • Prettier
 • Nodemon
 • Postman
+
+backend and express: https://github.com/Juanpcd27/se_project_express
