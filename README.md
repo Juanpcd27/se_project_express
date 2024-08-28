@@ -19,3 +19,5 @@ Technologies used:
 • Postman
 
 backend and express: https://github.com/Juanpcd27/se_project_express
+
+Domain name: https://www.wtwr-project.home.kg/
