@@ -22,7 +22,7 @@ mongoose
 
 app.use(cors());
 app.use(express.json());
-
+app.use(requestLogger);
 app.get("/items", getItems);
 app.get("/crash-test", () => {
   setTimeout(() => {
@@ -31,7 +31,6 @@ app.get("/crash-test", () => {
 });
 app.post("/signin", login);
 app.post("/signup", createUser);
-app.use(requestLogger);
 
 app.use("/", mainRouter);
 app.use(errorLogger);
