@@ -12,7 +12,7 @@ const { getItems } = require("./controllers/clothingItems");
 const { errorHandler } = require("./middlewares/error-handler");
 const { errors } = require("celebrate");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
-const { validateUser, validateLogin } = require("./middlewares/validation");
+// const { validateUser, validateLogin } = require("./middlewares/validation");
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
@@ -30,8 +30,8 @@ app.get("/crash-test", () => {
     throw new Error("Server will crash now");
   }, 0);
 });
-app.post("/signin", login, validateLogin);
-app.post("/signup", createUser, validateUser);
+app.post("/signin", login);
+app.post("/signup", createUser);
 
 app.use("/", mainRouter);
 app.use(errorLogger);

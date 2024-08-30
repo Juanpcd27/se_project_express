@@ -1,6 +1,12 @@
 const { Joi, celebrate } = require("celebrate");
 const validator = require("validator");
-const router = require("../routes");
+
+const validateURL = (value, helpers) => {
+  if (validator.isURL(value)) {
+    return value;
+  }
+  return helpers.error("string.uri");
+};
 
 const validateId = celebrate({
   body: Joi.object().keys({
@@ -30,11 +36,5 @@ const validateUserItems = celebrate({
     value: validator.isHexadecimal(24).required(),
   }),
 });
-const validateURL = (value, helpers) => {
-  if (validator.isURL(value)) {
-    return value;
-  }
-  return helpers.error("string.uri");
-};
 
 module.exports = { validateId, validateUser, validateLogin, validateUserItems };
