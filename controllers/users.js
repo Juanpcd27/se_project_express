@@ -3,14 +3,10 @@ const bcrypt = require("bcryptjs");
 
 const User = require("../models/user");
 const { duplicateError, successReq } = require("../utils/errors");
-
-const {
-  BadRequestError,
-  UnauthorizedError,
-  ForbiddenError,
-  NotFoundError,
-  ConflictError,
-} = require("../middlewares/error-handler");
+const { BadRequestError } = require("../middlewares/BadRequestError");
+const { UnauthorizedError } = require("../middlewares/UnauthorizedError");
+const { NotFoundError } = require("../middlewares/NotFoundError");
+const { ConflictError } = require("../middlewares/ConflictError");
 
 const { JWT_SECRET } = require("../utils/config");
 

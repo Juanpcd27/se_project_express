@@ -1,19 +1,7 @@
 const ClothingItem = require("../models/clothingItem");
-
-const {
-  invalid400,
-  documentNotFound,
-  defaultError,
-  forbiddenError,
-} = require("../utils/errors");
-
-const {
-  BadRequestError,
-  UnauthorizedError,
-  ForbiddenError,
-  NotFoundError,
-  ConflictError,
-} = require("../middlewares/error-handler");
+const { BadRequestError } = require("../middlewares/BadRequestError");
+const { NotFoundError } = require("../middlewares/NotFoundError");
+const { ForbiddenError } = require("../middlewares/ForbiddenError");
 
 const addItem = (req, res, next) => {
   const { name, weather, imageUrl } = req.body;
@@ -46,7 +34,9 @@ const deleteItem = (req, res, next) => {
     .orFail()
     .then((item) => {
       if (String(item.owner) !== req.user._id) {
-        next(ForbiddenError("You are not authorized to delete this item"));
+        return next(
+          new ForbiddenError("You are not authorized to delete this item")
+        );
       }
 
       return item

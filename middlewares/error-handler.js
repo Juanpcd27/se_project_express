@@ -1,50 +1,12 @@
 const errorHandler = (err, req, res, next) => {
-  console.error(err);
-  res.status(err.status).send({ message: err.message });
+  const statusCode = err.statusCode || 500;
 
-  return res.status(500);
+  const message =
+    statusCode === 500 ? "An error has ocurred on the server." : err.message;
+  res.status(statusCode).send({ message });
+  next();
 };
-
-class BadRequestError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 400;
-  }
-}
-
-class UnauthorizedError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 401;
-  }
-}
-
-class ForbiddenError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 403;
-  }
-}
-
-class NotFoundError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 404;
-  }
-}
-
-class ConflictError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 409;
-  }
-}
 
 module.exports = {
   errorHandler,
-  BadRequestError,
-  UnauthorizedError,
-  ForbiddenError,
-  NotFoundError,
-  ConflictError,
 };
