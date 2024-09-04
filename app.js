@@ -12,7 +12,11 @@ const { getItems } = require("./controllers/clothingItems");
 const { errorHandler } = require("./middlewares/error-handler");
 const { errors } = require("celebrate");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
-// const { validateUser, validateLogin } = require("./middlewares/validation");
+const {
+  validateId,
+  validateLogin,
+  validateCreateUser,
+} = require("./middlewares/validation");
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
@@ -24,14 +28,14 @@ mongoose
 app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
-app.get("/items", getItems);
+app.get("/items", validateId, getItems);
 app.get("/crash-test", () => {
   setTimeout(() => {
     throw new Error("Server will crash now");
   }, 0);
 });
-app.post("/signin", login);
-app.post("/signup", createUser);
+app.post("/signin", validateLogin, login);
+app.post("/signup", validateCreateUser, createUser);
 
 app.use("/", mainRouter);
 app.use(errorLogger);
