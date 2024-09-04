@@ -6,11 +6,11 @@ const { PORT = 3001 } = process.env;
 
 const cors = require("cors");
 require("dotenv").config();
+const { errors } = require("celebrate");
 const mainRouter = require("./routes/index");
 const { login, createUser } = require("./controllers/users");
 const { getItems } = require("./controllers/clothingItems");
 const { errorHandler } = require("./middlewares/error-handler");
-const { errors } = require("celebrate");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 const {
   validateId,
