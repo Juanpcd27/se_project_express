@@ -1,6 +1,6 @@
 # WTWR (What to Wear?)
 
-In this application we:
+In this application I have:
 
 • Set up an Express project
 • Create a database and connect it to the server
@@ -17,7 +17,5 @@ Technologies used:
 • Prettier
 • Nodemon
 • Postman
-
-backend and express: https://github.com/Juanpcd27/se_project_express
 
 Domain name: https://www.wtwr-project.home.kg/
