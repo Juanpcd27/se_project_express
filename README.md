@@ -1,5 +1,7 @@
 # WTWR (What to Wear?)
 
+This is the backend side for the WTWR project.
+
 In this application I have:
 
 • Set up an Express project
@@ -17,5 +19,7 @@ Technologies used:
 • Prettier
 • Nodemon
 • Postman
+• Google cloud computing
+
 
 Domain name: https://www.wtwr-project.home.kg/
